@@ -18,17 +18,34 @@ Base *generate(void) {
 void identify(Base *p) {
 	if (dynamic_cast<A*>(p)) {
 		std::cout << "A" << std::endl;
-	}
-	if (dynamic_cast<B*>(p)) {
+	} else if (dynamic_cast<B*>(p)) {
 		std::cout << "B" << std::endl;
-	}
-	if (dynamic_cast<C*>(p)) {
+	} else if (dynamic_cast<C*>(p)) {
 		std::cout << "C" << std::endl;
+	} else {
+		std::cout << "unknown derived class" << std::endl;
 	}
 }
 
 void identify(Base &p) {
-	identify(&p);
+	try {
+		A a = dynamic_cast<A&>(p);
+		std::cout << "A" << std::endl;
+	} catch (std::exception &e) {
+		try {
+			B b = dynamic_cast<B&>(p);
+			std::cout << "B" << std::endl;
+		}
+		catch (std::exception &e) {
+			try {
+				C c = dynamic_cast<C&>(p);
+				std::cout << "C" << std::endl;
+			}
+			catch (std::exception &e) {
+				std::cout << "unknown derived class" << std::endl;
+			}
+		}
+	}
 }
 
 int main() {
