@@ -16,19 +16,44 @@ void	impossible() {
 	exit(1);
 }
 
-		std::cout << "char: ";
-		if (!isprint(d))
-			std::cout << "Non displayable" << std::endl;
-		else
-			std::cout << "'" << static_cast<char>(d) << "'" << std::endl;
-int main(int argc, char **argv) {
-	NumType t = NONE;
+template <typename T> void print_char(T d) {
+	std::cout << "char: ";
+	if (!isprint(d))
+		std::cout << "Non displayable" << std::endl;
+	else
+		std::cout << "'" << static_cast<char>(d) << "'" << std::endl;
+}
 
-	if (argc != 2) {
-		std::cout << "This program takes exaclty one argument" << std::endl;
-		exit(1);
-	}
-	std::string s = argv[1];
+template <typename T> void print_int(T d) {
+	std::cout << "int: ";
+	if (d > INT_MAX || d < INT_MIN)
+		std::cout << "impossible" << std::endl;
+	else
+		std::cout << static_cast<int>(d) << std::endl;
+}
+
+template <typename T> void print_float(T d) {
+	std::cout << "float: ";
+	if (d > FLT_MAX || d < -FLT_MAX)
+		std::cout << "impossible" << std::endl;
+	else
+		std::cout << static_cast<float>(d) << "f" << std::endl;
+}
+
+template <typename T> void print_double(T d) {
+	std::cout << "double: ";
+		std::cout << static_cast<double>(d) << std::endl;
+}
+
+template <typename T> void print_numbers(T d) {
+	print_char(d);
+	print_int(d);
+	print_float(d);
+	print_double(d);
+}
+
+NumType get_numtype(std::string s) {
+	NumType t = NONE;
 
 	if (s.length() == 1 && !isdigit(s[0]))
 		t = CHAR;
@@ -63,13 +88,39 @@ int main(int argc, char **argv) {
 			}
 		}
 	}
+	return (t);
+}
+
+int main(int argc, char **argv) {
+
+	if (argc != 2) {
+		std::cout << "This program takes exaclty one argument" << std::endl;
+		exit(1);
+	}
+
+	std::string s = argv[1];
+
+	if (s == "nan" || s == "-inf" || s == "+inf") {
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: " << s << "f" << std::endl;
+		std::cout << "double: " << s << std::endl;
+		return 0;
+	}
+	if (s == "nanf" || s == "-inff" || s == "+inff") {
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: " << s << std::endl;
+		std::cout << "double: " << s.substr(0, s.size()-1) << std::endl;
+		return 0;
+	}
+
+	NumType t = get_numtype(s);
+
 	std::cout << std::showpoint;
 	std::cout << std::setprecision(1) << std::fixed;
 	if (t == CHAR) {
-		std::cout << "char: '" << s[0]<< "'" << std::endl;
-		std::cout << "int: " << static_cast<int>(s[0]) << std::endl;
-		std::cout << "float: " << static_cast<float>(s[0]) << "f" << std::endl;
-		std::cout << "double: " << static_cast<double>(s[0]) << std::endl;
+		print_numbers(s[0]);
 	}
 	if (t == INT) {
 		char *end;
@@ -78,14 +129,7 @@ int main(int argc, char **argv) {
 			std::cout << "overflow!" << std::endl;
 			impossible();
 		}
-		std::cout << "char: ";
-		if (!isprint(i))
-			std::cout << "Non displayable" << std::endl;
-		else
-			std::cout << "'" << static_cast<char>(i) << "'" << std::endl;
-		std::cout << "int: " << i << std::endl;
-		std::cout << "float: " << static_cast<float>(i) << "f" << std::endl;
-		std::cout << "double: " << static_cast<double>(i) << std::endl;
+		print_numbers(i);
 	}
 	if (t == FLOAT) {
 		char *end;
@@ -94,18 +138,7 @@ int main(int argc, char **argv) {
 			std::cout << "overflow!" << std::endl;
 			impossible();
 		}
-		std::cout << "char: ";
-		if (!isprint(d))
-			std::cout << "Non displayable" << std::endl;
-		else
-			std::cout << "'" << static_cast<char>(d) << "'" << std::endl;
-		std::cout << "int: ";
-		if (d > INT_MAX || d < INT_MIN)
-			std::cout << "impossible" << std::endl;
-		else
-			std::cout << static_cast<int>(d) << std::endl;
-		std::cout << "float: " << d << "f" << std::endl;
-		std::cout << "double: " << d << std::endl;
+		print_numbers(d);
 	}
 	if (t == DOUBLE) {
 		char *end;
@@ -114,20 +147,6 @@ int main(int argc, char **argv) {
 			std::cout << "overflow!" << std::endl;
 			impossible();
 		}
-		std::cout << "char: ";
-		if (!isprint(d))
-			std::cout << "Non displayable" << std::endl;
-		else
-			std::cout << "'" << static_cast<char>(d) << "'" << std::endl;
-		std::cout << "int: ";
-		if (d > INT_MAX || d < INT_MIN)
-			std::cout << "impossible" << std::endl;
-		else
-			std::cout << static_cast<int>(d) << std::endl;
-		if (d > FLT_MAX || d < -FLT_MAX)
-			std::cout << "impossible" << std::endl;
-		else
-			std::cout << "float: " << d << "f" << std::endl;
-		std::cout << "double: " << d << std::endl;
+		print_numbers(d);
 	}
 }
