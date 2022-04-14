@@ -1,0 +1,11 @@
+*.o
+a.out
+my_*
+*.swp
+*.a
+*.~
+*.dSYM
+tags
+*.replace
+test.c
+convert
