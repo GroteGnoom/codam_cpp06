@@ -18,7 +18,7 @@ void	impossible() {
 
 template <typename T> void print_char(T d) {
 	std::cout << "char: ";
-	if (!isprint(d))
+	if (d > 255 || d < 0 || !isprint(d))
 		std::cout << "Non displayable" << std::endl;
 	else
 		std::cout << "'" << static_cast<char>(d) << "'" << std::endl;
@@ -32,17 +32,27 @@ template <typename T> void print_int(T d) {
 		std::cout << static_cast<int>(d) << std::endl;
 }
 
+template <typename T> void set_precision(T d) {
+	if (floor(d * 10) == d * 10) {
+		std::cout << std::showpoint;
+		std::cout << std::setprecision(1) << std::fixed;
+	}
+}
+
 template <typename T> void print_float(T d) {
 	std::cout << "float: ";
 	if (d > FLT_MAX || d < -FLT_MAX)
 		std::cout << "impossible" << std::endl;
-	else
+	else {
+		set_precision(d);
 		std::cout << static_cast<float>(d) << "f" << std::endl;
+	}
 }
 
 template <typename T> void print_double(T d) {
 	std::cout << "double: ";
-		std::cout << static_cast<double>(d) << std::endl;
+	set_precision(d);
+	std::cout << static_cast<double>(d) << std::endl;
 }
 
 template <typename T> void print_numbers(T d) {
@@ -117,8 +127,6 @@ int main(int argc, char **argv) {
 
 	NumType t = get_numtype(s);
 
-	std::cout << std::showpoint;
-	std::cout << std::setprecision(1) << std::fixed;
 	if (t == CHAR) {
 		print_numbers(s[0]);
 	}
